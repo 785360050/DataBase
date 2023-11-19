@@ -1,16 +1,27 @@
+# ============================================================================================================
+# 		检查版本
+# ============================================================================================================
 import sqlalchemy
 print(sqlalchemy.__version__  )
 
+
+# ============================================================================================================
+# 		连接数据库
+# ============================================================================================================
 import mysql.connector
 print(mysql.connector.__version__)
 
-
 from sqlalchemy import create_engine
 # engine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
-
 # engine = create_engine("mysql+mysqlconnector://root:187065@127.0.0.1:9200/test",echo=True)
 engine = create_engine("mysql+mysqlconnector://root:187065@127.0.0.1:9200/test")
 
+
+
+
+# ============================================================================================================
+# 		使用connection风格的数据库操作
+# ============================================================================================================
 from sqlalchemy import text
 with engine.connect() as conn:
     result = conn.execute(text("select * from test.t1;"))
@@ -20,13 +31,17 @@ with engine.connect() as conn:
 
 
 
+
+# ============================================================================================================
+# 		使用Session的数据库操作
+# ============================================================================================================
 from sqlalchemy.orm import Session
-
-
 with Session(engine) as session:
     result = session.execute(text("SELECT m1,n1 FROM test.t1;"))
     for row in result:
         print(row)
+
+
 
 
 # 准备元数据(数据库系统数据)，后续创建新表
