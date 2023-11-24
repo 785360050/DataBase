@@ -1,5 +1,5 @@
 # ============================================================================================================
-# 		使用 ORM [声明式]定义表元数据 
+# 		使用 ORM [声明式]定义表元数据
 # (Quick_Start中也有这部分的案例，见ORM/SQLAdmin_Python/Quick_Start/ORM_Define.py)
 # ============================================================================================================
 # 好处
@@ -54,6 +54,8 @@ class User(Base):
     name                               = mapped_column(String(30)) # Mapped可略
     fullname : Mapped[Optional[str]]   = mapped_column(String(30))
     addresses: Mapped[List["Address"]] = relationship(back_populates="user")
+    # relationship表示关联关系，见ORM/SQLAdmin_Python/VII_ORM相关的对象关系.py
+    # 一个User记录对应多个Address记录
 
     def __repr__(self) -> str:
         return f"User(id={self.id!r}, name={self.name!r}, fullname={self.fullname!r})"
@@ -65,6 +67,7 @@ class Address(Base):
     email_address: Mapped[str] = mapped_column(String(30))
     user_id = mapped_column(ForeignKey("user_account.id"))
     user: Mapped[User] = relationship(back_populates="addresses")
+    # 一个Address记录对应一个User记录
 
     def __repr__(self) -> str:
         return f"Address(id={self.id!r}, email_address={self.email_address!r})"
@@ -73,5 +76,3 @@ class Address(Base):
 from I_Engine连接数据库 import engine
 
 Base.metadata.create_all(engine)
-
-
