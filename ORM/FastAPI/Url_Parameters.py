@@ -1,3 +1,4 @@
+from ast import List
 from Server_Instance import app
 
 from fastapi import APIRouter  # 用于在服务器实例中包含当前文件的处理函数
@@ -68,3 +69,34 @@ async def read_user_item(user_id: int, item_id: str, q: str | None = None, short
     if not short:
         item.update({"description": "This is an amazing item that has a long description"})
     return item
+
+
+
+# ============================================================================================================
+# 		字符串检查
+# ============================================================================================================
+from typing import Annotated,List
+from fastapi import Query
+
+
+# http://127.0.0.1:8000/param_check?q=your_parameter_value
+@app.get("/param_check")
+#  Query(max_length=30) 检查参数长度最多30，超出时会给其他能处理的函数处理，如果没有则会报错，提示字符串长度超出限制
+# Query还有其他的参数可以设置，如min_length, regex, alias, title, description, deprecated, gt, ge, lt, le等
+# alias="qqq" 给参数起别名，此处的q为别名，在后面可以直接使用别名
+# description="qqq" 给参数起描述
+# title="qqq" 给参数起标题
+# deprecated=True 给参数设置是否弃用
+# include_in_schema=False 给参数设置是否在schema中显示
+async def check_param(q: Annotated[str | None, Query(max_length=30)] = None):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"size": len(q)})
+    return results
+
+# 同时查询多个参数http://127.0.0.1:8000/param_check?q=a&q=b 每个参数都会被检查
+@app.get("/param_check/multi")
+async def check_param_multi(q: Annotated[List[str] | None, Query(max_length=30)] = ["foo","bar"]): # 多个参数的默认值
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    query_items = {"q": q}
+    return query_items
