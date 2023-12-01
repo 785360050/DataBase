@@ -22,7 +22,9 @@ app = FastAPI()
 from Url_Request import router_url_request
 from Url_Parameters import router_url_parameters
 from Request_Body import router_request_body
+from Response import router_response
 
 app.include_router(router_url_request)
 app.include_router(router_url_parameters)
 app.include_router(router_request_body)
+app.include_router(router_response)
