@@ -1,3 +1,4 @@
+import imp
 from fastapi import FastAPI
 
 
@@ -28,3 +29,18 @@ app.include_router(router_url_request)
 app.include_router(router_url_parameters)
 app.include_router(router_request_body)
 app.include_router(router_response)
+
+
+
+
+# ============================================================================================================
+# 		Admin部分
+# ============================================================================================================
+from fastapi import FastAPI
+from sqladmin import Admin, ModelView
+
+admin = Admin(app, engine)
+
+from View import View_Account
+
+admin.add_view(View_Account)
